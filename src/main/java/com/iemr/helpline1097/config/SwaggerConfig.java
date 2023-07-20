@@ -48,8 +48,8 @@ public class SwaggerConfig {
 	}
 
 	private ApiInfo metaData() {
-		ApiInfo apiInfo = new ApiInfo("Spring Boot REST API", "Spring Boot REST API for Online Store", "1.0",
-				"Terms of service", new Contact("Wipro HCIT", "https://www.wipro.com", "mywipro@wipro.com"), "", "");
-		return apiInfo;
+		ApiInfo apiInfo = new ApiInfo("Helpline 1097 API", "The AMRIT Helpline1097 provides comprehensive support to individuals and families affected by AIDS, offering a variety of services to meet their needs.", "1.0",
+				"Terms of service", new Contact("AMRIT", "https://psmri.github.io/PSMRI/", "amrit@piramalswasthya.org"), "",
+                "");
 	}
 }
