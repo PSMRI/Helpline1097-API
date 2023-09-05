@@ -22,17 +22,13 @@
 package com.iemr.helpline1097.data.co.feedback;
 
 import java.sql.Timestamp;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.google.gson.annotations.Expose;
 import com.iemr.helpline1097.utils.mapper.OutputMapper;
@@ -42,8 +38,7 @@ import lombok.Data;
 @Entity
 @Table(name = "m_feedbackstatus")
 @Data
-public class FeedbackStatus
-{
+public class FeedbackStatus {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "FeedbackStatusID")
@@ -71,13 +66,11 @@ public class FeedbackStatus
 	@Column(name = "ProviderServiceMapID")
 	private Integer providerServiceMapID;
 
-	public FeedbackStatus()
-	{
+	public FeedbackStatus() {
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return OutputMapper.gson().toJson(this);
 	}
 }

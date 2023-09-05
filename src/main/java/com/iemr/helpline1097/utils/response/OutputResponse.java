@@ -35,8 +35,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.LongSerializationPolicy;
 import com.google.gson.annotations.Expose;
 
-public class OutputResponse
-{
+public class OutputResponse {
 	@Expose
 	private Object data;
 	Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
@@ -59,26 +58,19 @@ public class OutputResponse
 	private static final String RESPONSE = "{\"response\":\"$$STRING\"}";
 	private static final String RESPONSE_VALUE = "$$STRING";
 
-	public void setResponse(String message)
-	{
+	public void setResponse(String message) {
 		JsonArray ja = null;
-		try
-		{
+		try {
 			Object obj = new JsonParser().parse(message);
-			if ((obj instanceof JsonArray))
-			{
+			if ((obj instanceof JsonArray)) {
 				ja = (JsonArray) obj;
 				this.data = ja;
-			} else if ((obj instanceof JsonObject))
-			{
+			} else if ((obj instanceof JsonObject)) {
 				this.data = obj;
-			} else
-			{
+			} else {
 				this.data = new JsonParser().parse(RESPONSE.replace(RESPONSE_VALUE, message));
-				// this.data = message;
 			}
-		} catch (Exception exe)
-		{
+		} catch (Exception exe) {
 			this.data = message;
 			this.data = new JsonParser().parse(RESPONSE.replace(RESPONSE_VALUE, message));
 		}
@@ -88,85 +80,77 @@ public class OutputResponse
 
 	}
 
-	public void setError(Throwable thrown)
-	{
+	public void setError(Throwable thrown) {
 		Date currDate = Calendar.getInstance().getTime();
 		logger.info("error happened due to " + thrown.getClass().getSimpleName() + " at " + currDate.toString());
-		switch (thrown.getClass().getSimpleName())
-		{
-			case "IEMRException":
-				this.statusCode = USERID_FAILURE;
-				status = "User login failed";
-				errorMessage = thrown.getMessage();
-				break;
-			case "JSONException":
-				this.statusCode = OBJECT_FAILURE;
-				status = "Invalid object conversion";
-				errorMessage = "Invalid object conversion";
-				break;
-			case "SQLException":
-			case "ParseException":
-			case "NullPointerException":
-			case "SQLGrammarException":
-			case "ArrayIndexOutOfBoundsException":
-			case "ConstraintViolationException":
-				this.statusCode = CODE_EXCEPTION;
-				status = "Failed with critical errors at " + currDate.toString() + ".Please try after some time. "
-						+ "If error is still seen, contact your administrator.";
-				errorMessage = thrown.getMessage();
-				break;
-			case "IOException":
-			case "ConnectException":
-			case "ConnectIOException":
-				this.statusCode = ENVIRONMENT_EXCEPTION;
-				status = "Failed with connection issues at " + currDate.toString() + "Please try after some time. "
-						+ "If error is still seen,  contact your administrator.";
-				errorMessage = thrown.getMessage();
-				break;
-			case "JDBCException":
-				this.statusCode = ENVIRONMENT_EXCEPTION;
-				status = "Failed with DB connection issues at " + currDate.toString() + ". Please try after some time. "
-						+ "If error is still seen,  contact your administrator.";
-				errorMessage = thrown.getMessage();
-				break;
-			default:
-				this.statusCode = GENERIC_FAILURE;
-				status = "Failed with " + thrown.getMessage() + " at " + currDate.toString()
-						+ ".Please try after some time. If error is still seen, contact your administrator.";
-				errorMessage = thrown.getMessage();
-				break;
+		switch (thrown.getClass().getSimpleName()) {
+		case "IEMRException":
+			this.statusCode = USERID_FAILURE;
+			status = "User login failed";
+			errorMessage = thrown.getMessage();
+			break;
+		case "JSONException":
+			this.statusCode = OBJECT_FAILURE;
+			status = "Invalid object conversion";
+			errorMessage = "Invalid object conversion";
+			break;
+		case "SQLException":
+		case "ParseException":
+		case "NullPointerException":
+		case "SQLGrammarException":
+		case "ArrayIndexOutOfBoundsException":
+		case "ConstraintViolationException":
+			this.statusCode = CODE_EXCEPTION;
+			status = "Failed with critical errors at " + currDate.toString() + ".Please try after some time. "
+					+ "If error is still seen, contact your administrator.";
+			errorMessage = thrown.getMessage();
+			break;
+		case "IOException":
+		case "ConnectException":
+		case "ConnectIOException":
+			this.statusCode = ENVIRONMENT_EXCEPTION;
+			status = "Failed with connection issues at " + currDate.toString() + "Please try after some time. "
+					+ "If error is still seen,  contact your administrator.";
+			errorMessage = thrown.getMessage();
+			break;
+		case "JDBCException":
+			this.statusCode = ENVIRONMENT_EXCEPTION;
+			status = "Failed with DB connection issues at " + currDate.toString() + ". Please try after some time. "
+					+ "If error is still seen,  contact your administrator.";
+			errorMessage = thrown.getMessage();
+			break;
+		default:
+			this.statusCode = GENERIC_FAILURE;
+			status = "Failed with " + thrown.getMessage() + " at " + currDate.toString()
+					+ ".Please try after some time. If error is still seen, contact your administrator.";
+			errorMessage = thrown.getMessage();
+			break;
 		}
 		logger.error("Failure happend with " + thrown.getMessage() + "at " + currDate.toString(), thrown);
 	}
 
-	public void setError(int errorCode, String message, String status)
-	{
+	public void setError(int errorCode, String message, String status) {
 		this.errorMessage = message;
 		this.status = status;
 		this.statusCode = errorCode;
 	}
 
-	public void setError(int errorCode, String message)
-	{
+	public void setError(int errorCode, String message) {
 		setError(errorCode, message, message);
 	}
 
-	public boolean isSuccess()
-	{
+	public boolean isSuccess() {
 		return (this.statusCode == SUCCESS);
 	}
 
 	/**
 	 * @return the data
 	 */
-	public String getData()
-	{
+	public String getData() {
 		JSONObject obj = new JSONObject(toString());
-		if (obj.has("data"))
-		{
+		if (obj.has("data")) {
 			return obj.get("data").toString();
-		} else
-		{
+		} else {
 			return null;
 		}
 	}
@@ -174,55 +158,36 @@ public class OutputResponse
 	/**
 	 * @return the statusCode
 	 */
-	public int getStatusCode()
-	{
+	public int getStatusCode() {
 		return statusCode;
 	}
 
 	/**
 	 * @return the errorMessage
 	 */
-	public String getErrorMessage()
-	{
+	public String getErrorMessage() {
 		return errorMessage;
 	}
 
 	/**
 	 * @return the status
 	 */
-	public String getStatus()
-	{
+	public String getStatus() {
 		return status;
 	}
 
 	@Override
-	public String toString()
-	{
-		// return new Gson().toJson(this);
-		// Gson gson = OutputMapper.gson();
+	public String toString() {
 		GsonBuilder builder = new GsonBuilder();
 		builder.excludeFieldsWithoutExposeAnnotation().setLongSerializationPolicy(LongSerializationPolicy.STRING);
-		// builder.disableInnerClassSerialization();
 		return builder.create().toJson(this);
-		// JSONObject response = new JSONObject();
-		// response.put("data", data);
-		// response.put("statusCode", statusCode);
-		// response.put("status", status);
-		// response.put("errorMessage", errorMessage);
-		// return response.toString();
 	}
 
-	public String toStringWithSerialization()
-	{
+	public String toStringWithSerialization() {
 		GsonBuilder builder = new GsonBuilder();
 		builder.excludeFieldsWithoutExposeAnnotation();
 		builder.serializeNulls().setLongSerializationPolicy(LongSerializationPolicy.STRING);
 		return builder.create().toJson(this);
 	}
 
-	// public static void main(String[] args) {
-	// OutputResponse resp = new OutputResponse();
-	// resp.setResponse("{testing: [test]}");
-	// System.out.println(resp.toString());
-	// }
 }

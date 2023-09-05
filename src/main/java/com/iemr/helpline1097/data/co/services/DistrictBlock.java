@@ -22,15 +22,12 @@
 package com.iemr.helpline1097.data.co.services;
 
 import java.sql.Timestamp;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -42,8 +39,7 @@ import lombok.Data;
 @Entity
 @Table(name = "m_districtblock")
 @Data
-public class DistrictBlock
-{
+public class DistrictBlock {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "BlockID")
@@ -75,109 +71,88 @@ public class DistrictBlock
 	@Transient
 	private OutputMapper outputMapper = new OutputMapper();
 
-	public DistrictBlock()
-	{
+	public DistrictBlock() {
 	}
 
-	public DistrictBlock(Integer BlockID, String BlockName)
-	{
+	public DistrictBlock(Integer BlockID, String BlockName) {
 		this.blockID = BlockID;
 		this.blockName = BlockName;
 	}
 
-	public Integer getBlockID()
-	{
+	public Integer getBlockID() {
 		return this.blockID;
 	}
 
-	public void setBlockID(Integer blockID)
-	{
+	public void setBlockID(Integer blockID) {
 		this.blockID = blockID;
 	}
 
-	public Integer getDistrictID()
-	{
+	public Integer getDistrictID() {
 		return this.districtID;
 	}
 
-	public void setDistrictID(Integer districtID)
-	{
+	public void setDistrictID(Integer districtID) {
 		this.districtID = districtID;
 	}
 
-	public String getBlockName()
-	{
+	public String getBlockName() {
 		return this.blockName;
 	}
 
-	public void setBlockName(String blockName)
-	{
+	public void setBlockName(String blockName) {
 		this.blockName = blockName;
 	}
 
-	public Integer getStateID()
-	{
+	public Integer getStateID() {
 		return this.stateID;
 	}
 
-	public void setStateID(Integer stateID)
-	{
+	public void setStateID(Integer stateID) {
 		this.stateID = stateID;
 	}
 
-	public Boolean isDeleted()
-	{
+	public Boolean isDeleted() {
 		return this.deleted;
 	}
 
-	public void setDeleted(boolean deleted)
-	{
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
 
-	public String getCreatedBy()
-	{
+	public String getCreatedBy() {
 		return this.createdBy;
 	}
 
-	public void setCreatedBy(String createdBy)
-	{
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public Timestamp getCreatedDate()
-	{
+	public Timestamp getCreatedDate() {
 		return this.createdDate;
 	}
 
-	public void setCreatedDate(Timestamp createdDate)
-	{
+	public void setCreatedDate(Timestamp createdDate) {
 		this.createdDate = createdDate;
 	}
 
-	public String getModifiedBy()
-	{
+	public String getModifiedBy() {
 		return this.modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy)
-	{
+	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Timestamp getLastModDate()
-	{
+	public Timestamp getLastModDate() {
 		return this.lastModDate;
 	}
 
-	public void setLastModDate(Timestamp lastModDate)
-	{
+	public void setLastModDate(Timestamp lastModDate) {
 		this.lastModDate = lastModDate;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return outputMapper.gson().toJson(this);
 	}
 }

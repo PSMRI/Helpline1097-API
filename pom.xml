@@ -153,8 +153,7 @@
 			<artifactId>json</artifactId>
 			<version>20160212</version>
 		</dependency>
-		<!-- <dependency> <groupId>com.iemr.utils</groupId> <artifactId>iemr-utils</artifactId> 
-			<version>0.0.3</version> </dependency> -->
+
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
@@ -209,28 +208,23 @@
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session</artifactId>
 		</dependency>
-		<!-- Lobmok and mapper dependencies start -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<!-- <scope>provided</scope> <optional>true</optional> -->
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-jdk8</artifactId>
 			<version>${org.mapstruct.version}</version>
-			<!-- <scope>provided</scope> -->
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-processor</artifactId>
 			<version>${org.mapstruct.version}</version>
-			<!-- <scope>provided</scope> -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
-			<!-- <scope>runtime</scope> -->
 		</dependency>
 
 
@@ -248,14 +242,7 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.0.2</version>
 			</plugin>
-			<!-- <plugin> <groupId>pl.project13.maven</groupId> <artifactId>git-commit-id-plugin</artifactId> 
-				<version>2.2.4</version> <executions> <execution> <id>get-the-git-infos</id> 
-				<goals> <goal>revision</goal> </goals> </execution> </executions> <configuration> 
-				<dotGitDirectory>${project.basedir}/.git</dotGitDirectory> <prefix>git</prefix> 
-				<verbose>false</verbose> <generateGitPropertiesFile>true</generateGitPropertiesFile> 
-				<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename> 
-				<format>json</format> <gitDescribe> <skip>false</skip> <always>false</always> 
-				<dirty>-dirty</dirty> </gitDescribe> </configuration> </plugin> -->
+
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -298,8 +285,7 @@
 								<echo>
 									concatinating properties file ${target-properties} and
 									${source-properties}
-									<!-- $${server-hostname} $${server-port} ${server-id} $${server-username} 
-										$${server-password} -->
+
 								</echo>
 								<concat destfile="${target-properties}" append="yes"
 									force="yes">
@@ -311,11 +297,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- <plugin> <groupId>org.wildfly.plugins</groupId> <artifactId>wildfly-maven-plugin</artifactId> 
-				<version>1.2.1.Final</version> <configuration> <id>${server-id}</id> <hostname>$${server-hostname}</hostname> 
-				<port>$${server-port}</port> <username>admin</username> <password>ad@min123</password> 
-				</configuration> <executions> <execution> <phase>install</phase> <goals> 
-				<goal>deploy</goal> </goals> </execution> </executions> </plugin> -->
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

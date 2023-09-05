@@ -22,6 +22,7 @@
 package com.iemr.helpline1097.data.everwell;
 
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,10 +32,9 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.google.gson.annotations.Expose;
-import com.iemr.helpline1097.data.co.services.States;
-import com.iemr.helpline1097.utils.mapper.OutputMapper;
 
 import lombok.Data;
+
 @Entity
 @Table(name = "m_everwellguidelines")
 @Data
@@ -46,33 +46,33 @@ public class EverwellGuidelines {
 	@Expose
 	private Long id;
 	@Expose
-	@Column(name="GuidelineName")
+	@Column(name = "GuidelineName")
 	private String guidelineName;
 	@Expose
-	@Column(name="GuidelineDesc")
+	@Column(name = "GuidelineDesc")
 	private String guidelineDesc;
 	@Expose
-	@Column(name="fileName")
+	@Column(name = "fileName")
 	private String fileName;
 	@Expose
-	@Column(name="fileExtension")
+	@Column(name = "fileExtension")
 	private String fileExtension;
 	@Expose
-	@Column(name="fileContent")
+	@Column(name = "fileContent")
 	private String fileContent;
 	@Expose
-	@Column(name="category")
+	@Column(name = "category")
 	private String category;
-	@Column(name="providerServiceMapID")
+	@Column(name = "providerServiceMapID")
 	private Integer providerServiceMapID;
 	@Expose
-	@Column(name="userID")
+	@Column(name = "userID")
 	private Integer userID;
 	@Expose
-	@Column(name="validFrom")
+	@Column(name = "validFrom")
 	private Timestamp validFrom;
 	@Expose
-	@Column(name="validTill")
+	@Column(name = "validTill")
 	private Timestamp validTill;
 	@Transient
 	private Integer adherencePercentage;
