@@ -131,10 +131,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 		return null;
 	}
 
-	/***
-	 * @param request
-	 * @throws Exception
-	 */
 	@Override
 	public String saveFeedbackFromCustomer(String feedbackDetails, HttpServletRequest request) throws Exception {
 		OutputResponse output = new OutputResponse();

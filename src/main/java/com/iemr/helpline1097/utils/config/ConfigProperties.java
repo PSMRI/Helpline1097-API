@@ -117,7 +117,6 @@ public class ConfigProperties {
 			if (properties == null) {
 				initalizeProperties();
 			}
-			// result = environment.getProperty(propertyName);
 			result = properties.getProperty(propertyName);
 		} catch (Exception e) {
 			logger.error(propertyName + " retrival failed.", e);
