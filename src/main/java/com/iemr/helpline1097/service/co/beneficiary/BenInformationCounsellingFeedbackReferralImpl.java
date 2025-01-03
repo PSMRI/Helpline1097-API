@@ -21,6 +21,7 @@
 */
 package com.iemr.helpline1097.service.co.beneficiary;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -134,79 +135,65 @@ public class BenInformationCounsellingFeedbackReferralImpl implements BenInforma
 
 	@Override
 	public String saveBenCalReferralMapping(String referralRequest) {
-		List<DirectoryMapping> resultSet = new ArrayList<DirectoryMapping>();
-		try {
-			BenCallServicesMappingHistory[] reqArray = new Gson().fromJson(referralRequest,
-					BenCallServicesMappingHistory[].class);
-			InstitutionDetails[] institutes = inputMapper.gson().fromJson(referralRequest, InstitutionDetails[].class);
-			DirectoryMapping[] directories = inputMapper.gson().fromJson(referralRequest, DirectoryMapping[].class);
-			for (int idx = 0; idx < institutes.length; idx++) {
-				Set<Object[]> dirMaps = null;
-				DirectoryMapping maps = new DirectoryMapping();
-				BenCallServicesMappingHistory hist = null;
+	    List<DirectoryMapping> resultSet = new ArrayList<>();
+	    try {
+	        BenCallServicesMappingHistory[] reqArray = new Gson().fromJson(referralRequest, BenCallServicesMappingHistory[].class);
+	        InstitutionDetails[] institutes = inputMapper.gson().fromJson(referralRequest, InstitutionDetails[].class);
+	        DirectoryMapping[] directories = inputMapper.gson().fromJson(referralRequest, DirectoryMapping[].class);
 
-				if (institutes[idx].getDistrictBranchMappingID() != null) {
+	        for (int idx = 0; idx < institutes.length; idx++) {
+	            InstitutionDetails institute = institutes[idx];
+	            DirectoryMapping directory = directories[idx];
 
-					Set<Object[]> directoryMapping = directoryMappingRepository.findDirectories(
-							directories[idx].getInstituteDirectoryID(), directories[idx].getInstituteSubDirectoryID());
-					List<Object[]> resultList = new ArrayList<>(directoryMapping);
-					for (int i = 0; i < resultList.size(); i++) {
-						Object[] objects = resultList.get(i);
+	            Set<Object[]> directoryMapping = findDirectoryMappings(directory);
 
-						Long directoryMapId = Long.valueOf(objects[0].toString());
-						List<InstitutionDetails> insitutionDetails = directoryMappingRepository.findInstituteDetails(
-								(Integer) objects[1], institutes[idx].getStateID(), institutes[idx].getDistrictID(),
-								institutes[idx].getBlockID(), institutes[idx].getDistrictBranchMappingID());
-						ObjectMapper objectMapper = new ObjectMapper();
-						hist = objectMapper.readValue(reqArray[idx].toString(), BenCallServicesMappingHistory.class);
-						maps = new DirectoryMapping(directoryMapId, insitutionDetails.get(i));
-						resultSet.add(maps);
-						hist.setInstituteDirMapID((Long) objects[0]);
-						benCalServiceCatSubcatMappingRepo.save(hist);
-					}
-				} else if (institutes[idx].getBlockID() != null) {
-					Set<Object[]> directoryMapping = directoryMappingRepository.findDirectories(
-							directories[idx].getInstituteDirectoryID(), directories[idx].getInstituteSubDirectoryID());
-					List<Object[]> resultList = new ArrayList<>(directoryMapping);
-					for (int i = 0; i < resultList.size(); i++) {
-						Object[] objects = resultList.get(i);
+	            List<BenCallServicesMappingHistory> historyList = new ArrayList<>();
+	            for (Object[] objects : directoryMapping) {
+	                Long directoryMapId = Long.valueOf(objects[0].toString());
+	                List<InstitutionDetails> institutionDetails = getInstitutionDetails(objects, institute);
 
-						Long directoryMapId = Long.valueOf(objects[0].toString());
-						List<InstitutionDetails> insitutionDetails = directoryMappingRepository.findInstituteDetails(
-								(Integer) objects[1], institutes[idx].getStateID(), institutes[idx].getDistrictID(),
-								institutes[idx].getBlockID());
-						ObjectMapper objectMapper = new ObjectMapper();
-						hist = objectMapper.readValue(reqArray[idx].toString(), BenCallServicesMappingHistory.class);
-						maps = new DirectoryMapping(directoryMapId, insitutionDetails.get(i));
-						resultSet.add(maps);
-						hist.setInstituteDirMapID((Long) objects[0]);
-						benCalServiceCatSubcatMappingRepo.save(hist);
-					}
-				} else {
-					Set<Object[]> directoryMapping = directoryMappingRepository.findDirectories(
-							directories[idx].getInstituteDirectoryID(), directories[idx].getInstituteSubDirectoryID());
-					List<Object[]> resultList = new ArrayList<>(directoryMapping);
-					for (int i = 0; i < resultList.size(); i++) {
-						Object[] objects = resultList.get(i);
+	                if (!institutionDetails.isEmpty()) {
+	                    DirectoryMapping maps = new DirectoryMapping(directoryMapId, institutionDetails.get(0));
+	                    resultSet.add(maps);
 
-						Long directoryMapId = Long.valueOf(objects[0].toString());
-						List<InstitutionDetails> insitutionDetails = directoryMappingRepository.findInstituteDetails(
-								(Integer) objects[1], institutes[idx].getStateID(), institutes[idx].getDistrictID());
-						ObjectMapper objectMapper = new ObjectMapper();
-						hist = objectMapper.readValue(reqArray[idx].toString(), BenCallServicesMappingHistory.class);
-						if(!ObjectUtils.isEmpty(insitutionDetails)) {
-							maps = new DirectoryMapping(directoryMapId, insitutionDetails.get(i));
-							resultSet.add(maps);
-						}
-						hist.setInstituteDirMapID((Long) objects[0]);
-						benCalServiceCatSubcatMappingRepo.save(hist);
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return resultSet.toString();
+	                    BenCallServicesMappingHistory hist = createHistoryObject(reqArray, idx, objects);
+	                    hist.setInstituteDirMapID(directoryMapId);
+	                    historyList.add(hist);
+	                }
+	            }
+	            benCalServiceCatSubcatMappingRepo.saveAll(historyList);
+	        }
+	    } catch (Exception e) {
+	        logger.error(e.getMessage(), e);
+	    }
+	    return resultSet.toString();
+	}
+
+	private Set<Object[]> findDirectoryMappings(DirectoryMapping directory) {
+	    return directoryMappingRepository.findDirectories(
+	            directory.getInstituteDirectoryID(), directory.getInstituteSubDirectoryID());
+	}
+
+	private List<InstitutionDetails> getInstitutionDetails(Object[] objects, InstitutionDetails institute) {
+	    Integer directoryId = (Integer) objects[1];
+	    if (institute.getDistrictBranchMappingID() != null) {
+	        return directoryMappingRepository.findInstituteDetails(
+	                directoryId, institute.getStateID(), institute.getDistrictID(),
+	                institute.getBlockID(), institute.getDistrictBranchMappingID());
+	    } else if (institute.getBlockID() != null) {
+	        return directoryMappingRepository.findInstituteDetails(
+	                directoryId, institute.getStateID(), institute.getDistrictID(), institute.getBlockID());
+	    } else {
+	        return directoryMappingRepository.findInstituteDetails(
+	                directoryId, institute.getStateID(), institute.getDistrictID());
+	    }
+	}
+
+	private BenCallServicesMappingHistory createHistoryObject(BenCallServicesMappingHistory[] reqArray, int idx, Object[] objects) throws IOException {
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    BenCallServicesMappingHistory hist = objectMapper.readValue(reqArray[idx].toString(), BenCallServicesMappingHistory.class);
+	    hist.setInstituteDirMapID(Long.valueOf(objects[0].toString()));
+	    return hist;
 	}
 
 }
