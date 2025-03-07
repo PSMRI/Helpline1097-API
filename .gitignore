@@ -12,6 +12,7 @@ config.json
 mvnw
 mvnw.cmd
 /logs
+command_output.log
 
 # Properties
 src/main/environment/common_local.properties

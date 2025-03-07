@@ -52,3 +52,12 @@ All the features have been exposed as REST endpoints. For detailed information o
 The Helpline1097 module provides a comprehensive solution for managing various aspects of your application, catering to the needs of individuals and families affected by AIDS.
 
 Feel free to explore the service and make a positive impact on the lives of those seeking support and assistance.
+
+## Filing Issues
+
+If you encounter any issues, bugs, or have feature requests, please file them in the [main AMRIT repository](https://github.com/PSMRI/AMRIT/issues). Centralizing all feedback helps us streamline improvements and address concerns efficiently.  
+
+## Join Our Community
+
+We’d love to have you join our community discussions and get real-time support!  
+Join our [Discord server](https://discord.gg/FVQWsf5ENS) to connect with contributors, ask questions, and stay updated.  

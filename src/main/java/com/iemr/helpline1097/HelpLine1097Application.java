@@ -26,7 +26,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import com.iemr.helpline1097.data.co.beneficiary.User;
 import com.iemr.helpline1097.utils.IEMRApplBeans;
 
 /**
@@ -49,4 +54,19 @@ public class HelpLine1097Application extends SpringBootServletInitializer {
 	}
 
 	private static Class<HelpLine1097Application> helpLine1097Application = HelpLine1097Application.class;
+
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+		RedisTemplate<String, Object> template = new RedisTemplate<>();
+		template.setConnectionFactory(factory);
+
+		// Use StringRedisSerializer for keys (userId)
+		template.setKeySerializer(new StringRedisSerializer());
+
+		// Use Jackson2JsonRedisSerializer for values (Users objects)
+		Jackson2JsonRedisSerializer<User> serializer = new Jackson2JsonRedisSerializer<>(User.class);
+		template.setValueSerializer(serializer);
+
+		return template;
+	}
 }
