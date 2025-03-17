@@ -39,6 +39,7 @@ public class JwtUserIdValidationFilter implements Filter {
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
+				String cookiePath= cookie.getPath();
 				if ("userId".equals(cookie.getName())) {
 					logger.warn("userId found in cookies! Clearing it...");
 					clearUserIdCookie(response); // Explicitly remove userId cookie

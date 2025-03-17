@@ -37,6 +37,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.sun.jersey.multipart.FormDataBodyPart;
@@ -110,7 +111,7 @@ public class HttpUtils {
 		body = responseEntity.getBody();
 		return body;
 	}
-
+	
 	public String uploadFile(String uri, String data, HashMap<String, Object> header) throws IOException {
 		String body;
 		HttpHeaders headers = new HttpHeaders();
