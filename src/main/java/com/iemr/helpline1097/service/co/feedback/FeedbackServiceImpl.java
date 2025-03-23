@@ -31,7 +31,17 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -41,6 +51,7 @@ import com.iemr.helpline1097.data.co.feedback.FeedbackDetails;
 import com.iemr.helpline1097.data.co.feedback.FeedbackRequestDetails;
 import com.iemr.helpline1097.repository.co.beneficiary.BenCalServiceCatSubcatMappingRepo;
 import com.iemr.helpline1097.repository.co.feedback.FeedbackRepository;
+import com.iemr.helpline1097.utils.CookieUtil;
 import com.iemr.helpline1097.utils.config.ConfigProperties;
 import com.iemr.helpline1097.utils.exception.IEMRException;
 import com.iemr.helpline1097.utils.http.HttpUtils;
@@ -56,6 +67,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 	private Logger logger = LoggerFactory.getLogger(FeedbackServiceImpl.class);
 
 	private BenCalServiceCatSubcatMappingRepo benCalServiceCatSubcatMappingRepo;
+	@Autowired
+	private CookieUtil cookieUtil;
 
 	@Autowired
 	public void getBenCalServiceCatSubcatMappingRepo(
@@ -186,15 +199,19 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	}
 
-	private OutputResponse createFeedback(String feedbackDetails, HttpServletRequest request) throws IEMRException, JsonMappingException, JsonProcessingException {
-		HttpUtils utils = new HttpUtils();
+	private OutputResponse createFeedback(String feedbackDetails, HttpServletRequest request)
+			throws IEMRException, JsonMappingException, JsonProcessingException {
+		RestTemplate restTemplate = new RestTemplate();
 		ObjectMapper objectMapper = new ObjectMapper();
-		HashMap<String, Object> header = new HashMap<String, Object>();
-		header.put("Authorization", request.getHeader("Authorization"));
-		String responseStr = utils.post(
-				properties.getPropertyByName("common-url") + "/" + properties.getPropertyByName("create-feedback"),
-				feedbackDetails, header);
-		OutputResponse response = objectMapper.readValue(responseStr, OutputResponse.class);
-		return response;
+		String jwtTokenFromCookie = cookieUtil.getJwtTokenFromCookie(request);
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("Content-Type", "application/json");
+		headers.add("AUTHORIZATION", request.getHeader("Authorization"));
+		headers.add("Jwttoken", jwtTokenFromCookie);
+		String url = properties.getPropertyByName("common-url") + "/" + properties.getPropertyByName("create-feedback");
+		HttpEntity<Object> request1 = new HttpEntity<Object>(feedbackDetails, headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request1, String.class);
+		OutputResponse convertValue = objectMapper.readValue(response.getBody(), OutputResponse.class);
+		return convertValue;
 	}
 }

@@ -113,7 +113,11 @@ public class FeedbackController {
 	public String saveBenFeedback(@RequestBody String feedbackRequest, HttpServletRequest request) {
 		OutputResponse response = new OutputResponse();
 		try {
+			String path = request.getRequestURI();
 			String savedFeedback = feedbackServiceImpl.saveFeedbackFromCustomer(feedbackRequest, request);
+			if(savedFeedback != null) {
+				logger.info("save feedback" +savedFeedback);
+			}
 			response.setResponse(savedFeedback);
 		} catch (Exception e) {
 			logger.error("saveBenFeedback failed with error " + e.getMessage(), e);
