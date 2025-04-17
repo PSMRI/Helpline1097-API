@@ -66,7 +66,7 @@ public class Service1097HistoryController {
 		this.beneficiaryCallService = beneficiaryCallService;
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get service history")
 	@PostMapping(value = "/getHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getServiceHistory(
@@ -85,7 +85,7 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get beneficiary call history")
 	@PostMapping(value = "/getBeneficiaryCallHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getBeneficiaryCallHistory(
@@ -104,7 +104,7 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Fetch service history")
 	@PostMapping(value = "/setHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String setServiceHistory(@RequestBody String request) {
@@ -122,7 +122,7 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get call summary")
 	@PostMapping(value = "/getCallSummary", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getCallSummary(
@@ -140,7 +140,7 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary= "Get beneficiary call history")
 	@PostMapping(value = "/getBeneficiaryCallsHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getBeneficiaryCallsHistory(
@@ -173,7 +173,7 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get referral history")
 	@PostMapping(value = "/getReferralsHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getReferralsHistory(
@@ -195,7 +195,7 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get feedback history")
 	@PostMapping(value = "/getFeedbacksHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getFeedbacksHistory(
@@ -217,7 +217,7 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get information history")
 	@PostMapping(value = "/getInformationsHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getInformationsHistory(
@@ -240,7 +240,7 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get counselling history")
 	@PostMapping(value = "/getCounsellingsHistory")
 	public String getCounsellingsHistory(
@@ -263,7 +263,7 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get case report")
 	@PostMapping(value = "/getCaseSheet", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getCaseSheet(

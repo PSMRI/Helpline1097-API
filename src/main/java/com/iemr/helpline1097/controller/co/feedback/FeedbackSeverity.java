@@ -51,7 +51,7 @@ public class FeedbackSeverity {
 		this.feedbackSeverityService = feedbackSeverityService;
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get feedback type")
 	@PostMapping(value = "/getseverity", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getSeverity() {
@@ -67,7 +67,7 @@ public class FeedbackSeverity {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get feedback type")
 	@PostMapping(value = "/gettype", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getFeedbackType() {
