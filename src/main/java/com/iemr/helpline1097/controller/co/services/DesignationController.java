@@ -42,7 +42,7 @@ public class DesignationController {
 	InputMapper inputMapper = new InputMapper();
 	Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get designations")
 	@PostMapping(value = "/get", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getDesignations() {

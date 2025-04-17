@@ -24,7 +24,6 @@ package com.iemr.helpline1097.controller.everwell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,7 +43,7 @@ public class EverwellGuidelinesController {
 	@Autowired
 	private EverwellService everwellService;
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Save everwell guidelines")
 	@PostMapping(value = "/saveEverwellGuidelines", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String saveEverwellGuidelines(
@@ -62,7 +61,7 @@ public class EverwellGuidelinesController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Fetch everwell guidelines")
 	@PostMapping(value = "/fetchEverwellGuidelines", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String fetchEverwellGuidelines(
@@ -79,7 +78,7 @@ public class EverwellGuidelinesController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Delete everwell guidelines")
 	@PostMapping(value = "/deleteEverwellGuidelines", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String deleteEverwellGuidelines(

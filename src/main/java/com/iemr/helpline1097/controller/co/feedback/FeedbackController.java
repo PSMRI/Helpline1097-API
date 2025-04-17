@@ -73,7 +73,7 @@ public class FeedbackController {
 		this.feedbackService = feedbackService;
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary= "Get feedback list")
 	@PostMapping(value = "/getfeedbacklist", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String feedbackReuest(@RequestBody String request) {
@@ -91,7 +91,7 @@ public class FeedbackController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary= "Get feedback by post")
 	@PostMapping(value = "/getfeedback/{feedbackID}", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getFeedbackByPost(@PathVariable("feedbackID") int feedbackID) {
@@ -107,7 +107,7 @@ public class FeedbackController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary= "Save beneficiary feedback")
 	@PostMapping(value = "/saveBenFeedback", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String saveBenFeedback(@RequestBody String feedbackRequest, HttpServletRequest request) {

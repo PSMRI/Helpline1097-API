@@ -49,7 +49,7 @@ public class FeedbackRequestController {
 	@Autowired
 	private FeedbackRequestServiceImpl feedbackRequestServiceImpl;
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Create feedback request")
 	@PostMapping(value = "/put/feedbackRequest", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String feedbackCreate(@RequestBody String request) {
@@ -66,7 +66,7 @@ public class FeedbackRequestController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
+	
 	@Operation(summary = "Get feedback request")
 	@PostMapping(value = "/get/feedbackRequest/{feedbackRequestID}", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getFeedbackRequests(@PathVariable("feedbackRequestID") int feedbackRequestID) {
