@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.iemr.helpline-1097-API</groupId>
-	<artifactId>helpline-1097-API</artifactId>
-	<version>1.0</version>
+	<artifactId>helpline-1097-api</artifactId>
+	<version>3.1.0</version>
 	<packaging>war</packaging>
 
 
@@ -279,7 +279,7 @@
 
 
 	<build>
-		<finalName>1097api-v3.0.0</finalName>
+		<finalName>${artifactId}-${version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.owasp</groupId>

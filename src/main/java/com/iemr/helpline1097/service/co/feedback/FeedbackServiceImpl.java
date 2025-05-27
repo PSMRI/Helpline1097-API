@@ -52,6 +52,7 @@ import com.iemr.helpline1097.data.co.feedback.FeedbackRequestDetails;
 import com.iemr.helpline1097.repository.co.beneficiary.BenCalServiceCatSubcatMappingRepo;
 import com.iemr.helpline1097.repository.co.feedback.FeedbackRepository;
 import com.iemr.helpline1097.utils.CookieUtil;
+import com.iemr.helpline1097.utils.RestTemplateUtil;
 import com.iemr.helpline1097.utils.config.ConfigProperties;
 import com.iemr.helpline1097.utils.exception.IEMRException;
 import com.iemr.helpline1097.utils.http.HttpUtils;
@@ -203,13 +204,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 			throws IEMRException, JsonMappingException, JsonProcessingException {
 		RestTemplate restTemplate = new RestTemplate();
 		ObjectMapper objectMapper = new ObjectMapper();
-		String jwtTokenFromCookie = cookieUtil.getJwtTokenFromCookie(request);
-		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		headers.add("Content-Type", "application/json");
-		headers.add("AUTHORIZATION", request.getHeader("Authorization"));
-		headers.add("Jwttoken", jwtTokenFromCookie);
+		
+		HttpEntity<Object> request1 = RestTemplateUtil.createRequestEntity(feedbackDetails, request.getHeader("Authorization"));
 		String url = properties.getPropertyByName("common-url") + "/" + properties.getPropertyByName("create-feedback");
-		HttpEntity<Object> request1 = new HttpEntity<Object>(feedbackDetails, headers);
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request1, String.class);
 		OutputResponse convertValue = objectMapper.readValue(response.getBody(), OutputResponse.class);
 		return convertValue;
