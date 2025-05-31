@@ -45,6 +45,63 @@ To build the Helpline1097 microservice from source, follow these steps:
    - Run `mvn spring-boot:run` in the project directory.
    - Open your browser and go to `http://localhost:8080/swagger-ui.html#!/` to access the Swagger API documentation.
 
+## Setting Up Commit Hooks
+
+This project uses Git hooks to enforce consistent code quality and commit message standards. Even though this is a Java project, the hooks are powered by Node.js. Follow these steps to set up the hooks locally:
+
+### Prerequisites
+- Node.js (v14 or later)
+- npm (comes with Node.js)
+
+### Setup Steps
+
+1. **Install Node.js and npm**
+   - Download and install from [nodejs.org](https://nodejs.org/)
+   - Verify installation with:
+     ```
+     node --version
+     npm --version
+     ```
+
+2. **Install dependencies**
+   - From the project root directory, run:
+     ```
+     npm ci
+     ```
+   - This will install all required dependencies including Husky and commitlint
+
+3. **Verify hooks installation**
+   - The hooks should be automatically installed by Husky
+   - You can verify by checking if the `.husky` directory contains executable hooks
+
+### Commit Message Convention
+
+This project follows the [Conventional Commits](https://www.conventionalcommits.org/) specification:
+- Format: `type(scope): subject`
+- Example: `feat(helpline): add call routing feature`
+
+Types include:
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code changes that neither fix bugs nor add features
+- `perf`: Performance improvements
+- `test`: Adding or fixing tests
+- `build`: Changes to build process or tools
+- `ci`: Changes to CI configuration
+- `chore`: Other changes (e.g., maintenance tasks, dependencies)
+
+Your commit messages will be automatically validated when you commit, ensuring project consistency.
+
+### Using Commitizen
+
+For an easier commit process, you can use Commitizen:
+```
+npm run commit
+```
+This will guide you through creating a properly formatted commit message.
+
 ## Usage
 
 All the features have been exposed as REST endpoints. For detailed information on how to use the service, refer to the Swagger API specification.
@@ -59,5 +116,5 @@ If you encounter any issues, bugs, or have feature requests, please file them in
 
 ## Join Our Community
 
-We’d love to have you join our community discussions and get real-time support!  
+We'd love to have you join our community discussions and get real-time support!  
 Join our [Discord server](https://discord.gg/FVQWsf5ENS) to connect with contributors, ask questions, and stay updated.  
