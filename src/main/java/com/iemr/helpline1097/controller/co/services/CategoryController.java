@@ -28,7 +28,7 @@ import jakarta.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,7 +44,6 @@ public class CategoryController {
 	InputMapper inputMapper = new InputMapper();
 	Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-	@CrossOrigin()
 	@Operation(summary = "Get all categries")
 	@PostMapping(value = "/api/helpline1097/v1/get/category", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getAllCategries() {

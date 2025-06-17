@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +45,6 @@ public class CommonController {
 	InputMapper inputMapper = new InputMapper();
 	Logger logger = LoggerFactory.getLogger(CommonController.class);
 
-	@CrossOrigin()
 	@PostMapping(value = "/category", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getCategories() {
 		OutputResponse response = new OutputResponse();
@@ -57,7 +56,6 @@ public class CommonController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@PostMapping(value = "/subcategory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getSubcategories(@RequestBody String request) {
 		OutputResponse response = new OutputResponse();
@@ -72,7 +70,6 @@ public class CommonController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@PostMapping(value = "/categoryByID", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getcategoriesById(@RequestBody String request) {
 		OutputResponse response = new OutputResponse();
@@ -89,7 +86,6 @@ public class CommonController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@PostMapping(value = "/servicetypes", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getservicetypes() {
 		OutputResponse response = new OutputResponse();

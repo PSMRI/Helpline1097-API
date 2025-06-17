@@ -26,7 +26,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,8 +73,7 @@ public class FeedbackController {
 		this.feedbackService = feedbackService;
 	}
 
-	@CrossOrigin()
-	@Operation(summary= "Get feedback list")
+	@Operation(summary = "Get feedback list")
 	@PostMapping(value = "/getfeedbacklist", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String feedbackReuest(@RequestBody String request) {
 		OutputResponse response = new OutputResponse();
@@ -91,8 +90,7 @@ public class FeedbackController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
-	@Operation(summary= "Get feedback by post")
+	@Operation(summary = "Get feedback by post")
 	@PostMapping(value = "/getfeedback/{feedbackID}", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getFeedbackByPost(@PathVariable("feedbackID") int feedbackID) {
 		OutputResponse response = new OutputResponse();
@@ -107,16 +105,15 @@ public class FeedbackController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
-	@Operation(summary= "Save beneficiary feedback")
+	@Operation(summary = "Save beneficiary feedback")
 	@PostMapping(value = "/saveBenFeedback", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String saveBenFeedback(@RequestBody String feedbackRequest, HttpServletRequest request) {
 		OutputResponse response = new OutputResponse();
 		try {
 			String path = request.getRequestURI();
 			String savedFeedback = feedbackServiceImpl.saveFeedbackFromCustomer(feedbackRequest, request);
-			if(savedFeedback != null) {
-				logger.info("save feedback" +savedFeedback);
+			if (savedFeedback != null) {
+				logger.info("save feedback" + savedFeedback);
 			}
 			response.setResponse(savedFeedback);
 		} catch (Exception e) {
