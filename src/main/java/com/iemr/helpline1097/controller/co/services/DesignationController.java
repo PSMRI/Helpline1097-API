@@ -24,7 +24,7 @@ package com.iemr.helpline1097.controller.co.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +42,6 @@ public class DesignationController {
 	InputMapper inputMapper = new InputMapper();
 	Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-	@CrossOrigin()
 	@Operation(summary = "Get designations")
 	@PostMapping(value = "/get", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getDesignations() {

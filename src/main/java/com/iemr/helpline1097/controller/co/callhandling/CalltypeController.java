@@ -24,7 +24,7 @@ package com.iemr.helpline1097.controller.co.callhandling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,7 +48,6 @@ public class CalltypeController {
 	@Autowired
 	private IEMRCalltypeServiceImpl iEMRCalltypeServiceImpl;
 
-	@CrossOrigin()
 	@Operation(summary = "Add type")
 	@PostMapping(value = "/addType", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String addCallType(@RequestBody String request) {
@@ -71,7 +70,6 @@ public class CalltypeController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Get type")
 	@PostMapping(value = "/getTypes/{id}", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getAllCallTypes(@PathVariable("id") int id) {

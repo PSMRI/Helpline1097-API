@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,7 +66,6 @@ public class Service1097HistoryController {
 		this.beneficiaryCallService = beneficiaryCallService;
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Get service history")
 	@PostMapping(value = "/getHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getServiceHistory(
@@ -85,7 +84,6 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Get beneficiary call history")
 	@PostMapping(value = "/getBeneficiaryCallHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getBeneficiaryCallHistory(
@@ -104,15 +102,15 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Fetch service history")
 	@PostMapping(value = "/setHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String setServiceHistory(@RequestBody String request) {
 		OutputResponse response = new OutputResponse();
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
-			BenCallServicesMappingHistory serviceHistoryDetails = objectMapper.readValue(request, BenCallServicesMappingHistory.class);
-			
+			BenCallServicesMappingHistory serviceHistoryDetails = objectMapper.readValue(request,
+					BenCallServicesMappingHistory.class);
+
 			BenCallServicesMappingHistory savedObj = servicesHistoryService.createServiceHistory(serviceHistoryDetails);
 			response.setResponse(savedObj.toString());
 		} catch (Exception e) {
@@ -122,7 +120,6 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Get call summary")
 	@PostMapping(value = "/getCallSummary", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getCallSummary(
@@ -140,8 +137,7 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
-	@Operation(summary= "Get beneficiary call history")
+	@Operation(summary = "Get beneficiary call history")
 	@PostMapping(value = "/getBeneficiaryCallsHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getBeneficiaryCallsHistory(
 			@Param(value = "{\"beneficiaryRegID\":\"Integer - Beneficiary registration ID\", "
@@ -173,7 +169,6 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Get referral history")
 	@PostMapping(value = "/getReferralsHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getReferralsHistory(
@@ -195,7 +190,6 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Get feedback history")
 	@PostMapping(value = "/getFeedbacksHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getFeedbacksHistory(
@@ -217,7 +211,6 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Get information history")
 	@PostMapping(value = "/getInformationsHistory", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getInformationsHistory(
@@ -240,7 +233,6 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Get counselling history")
 	@PostMapping(value = "/getCounsellingsHistory")
 	public String getCounsellingsHistory(
@@ -263,7 +255,6 @@ public class Service1097HistoryController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Get case report")
 	@PostMapping(value = "/getCaseSheet", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getCaseSheet(
