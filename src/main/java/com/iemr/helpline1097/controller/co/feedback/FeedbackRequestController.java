@@ -24,7 +24,7 @@ package com.iemr.helpline1097.controller.co.feedback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,7 +49,6 @@ public class FeedbackRequestController {
 	@Autowired
 	private FeedbackRequestServiceImpl feedbackRequestServiceImpl;
 
-	@CrossOrigin()
 	@Operation(summary = "Create feedback request")
 	@PostMapping(value = "/put/feedbackRequest", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String feedbackCreate(@RequestBody String request) {
@@ -66,7 +65,6 @@ public class FeedbackRequestController {
 		return response.toString();
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Get feedback request")
 	@PostMapping(value = "/get/feedbackRequest/{feedbackRequestID}", produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String getFeedbackRequests(@PathVariable("feedbackRequestID") int feedbackRequestID) {

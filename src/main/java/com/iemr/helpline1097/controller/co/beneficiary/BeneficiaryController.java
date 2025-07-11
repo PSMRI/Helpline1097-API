@@ -26,7 +26,7 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,7 +65,6 @@ public class BeneficiaryController {
 		this.benInformationCounsellingFeedbackReferralImpl = benInformationCounsellingFeedbackReferralImpl;
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Add promo service detail")
 	@PostMapping(value = "add/promoServiceDetails", headers = "Authorization")
 	public String addPromoServiceDetails(@RequestBody String request) {
@@ -89,15 +88,15 @@ public class BeneficiaryController {
 
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Save information requested by the beneficiary during call")
 	@PostMapping(value = "/saveBenCalServiceCatSubcatMapping", headers = "Authorization")
 	public String saveBenCalServiceCatSubcatMapping(@RequestBody String request) {
 		OutputResponse response = new OutputResponse();
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
-			BenCallServicesMappingHistory[] benCallServicesMappingHistories =objectMapper.readValue(request, BenCallServicesMappingHistory[].class);
-			
+			BenCallServicesMappingHistory[] benCallServicesMappingHistories = objectMapper.readValue(request,
+					BenCallServicesMappingHistory[].class);
+
 			Iterable<BenCallServicesMappingHistory> benCallServicesMappingHistory = Arrays
 					.asList(benCallServicesMappingHistories);
 
@@ -111,15 +110,15 @@ public class BeneficiaryController {
 
 	}
 
-	@CrossOrigin()
 	@Operation(summary = "Save counselling requested by beneficiary")
 	@PostMapping(value = "/saveBenCalServiceCOCatSubcatMapping", headers = "Authorization")
 	public String saveBenCalServiceCOCatSubcatMapping(@RequestBody String request) {
 		OutputResponse response = new OutputResponse();
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
-			BenCallServicesMappingHistory[] benCallServicesMappingHistories =objectMapper.readValue(request, BenCallServicesMappingHistory[].class);
-			
+			BenCallServicesMappingHistory[] benCallServicesMappingHistories = objectMapper.readValue(request,
+					BenCallServicesMappingHistory[].class);
+
 			Iterable<BenCallServicesMappingHistory> benCallServicesMappingHistory = Arrays
 					.asList(benCallServicesMappingHistories);
 
@@ -137,7 +136,6 @@ public class BeneficiaryController {
 	 * @param referralRequest
 	 * @return
 	 */
-	@CrossOrigin()
 	@Operation(summary = "Save beneficiary call referral mapping")
 	@PostMapping(value = "/saveBenCalReferralMapping", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON, headers = "Authorization")
 	public String saveBenCalReferralMapping(@RequestBody String referralRequest) {
