@@ -35,7 +35,7 @@ import com.iemr.helpline1097.data.everwell.EverwellGuidelines;
 
 @Repository
 @RestResource(exported = false)
-public interface EverwellGuidelinesRepo extends CrudRepository<EverwellGuidelines, Long> { 
+public interface EverwellGuidelinesRepo extends CrudRepository<EverwellGuidelines, Integer> { 
 	@Query("select b from EverwellGuidelines b "
 			+ "where b.category = :category and b.providerServiceMapID = :providerServiceMapID and b.deleted!=true ")
 	public List<EverwellGuidelines> findGuidelinesByCategory(@Param("category") String category,@Param("providerServiceMapID") Integer providerServiceMapID);
