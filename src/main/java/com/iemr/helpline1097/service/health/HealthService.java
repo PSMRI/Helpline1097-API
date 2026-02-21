@@ -28,9 +28,10 @@ import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
@@ -53,33 +54,20 @@ import org.springframework.stereotype.Service;
 public class HealthService {
 
     private static final Logger logger = LoggerFactory.getLogger(HealthService.class);
-
-    // Status constants
     private static final String STATUS_KEY = "status";
     private static final String STATUS_UP = "UP";
     private static final String STATUS_DOWN = "DOWN";
     private static final String STATUS_DEGRADED = "DEGRADED";
-    
-    // Severity levels and keys
     private static final String SEVERITY_KEY = "severity";
     private static final String SEVERITY_OK = "OK";
     private static final String SEVERITY_WARNING = "WARNING";
     private static final String SEVERITY_CRITICAL = "CRITICAL";
-    
-    // Response keys
     private static final String ERROR_KEY = "error";
     private static final String MESSAGE_KEY = "message";
     private static final String RESPONSE_TIME_KEY = "responseTimeMs";
-    
-    // Timeouts (in seconds)
     private static final long MYSQL_TIMEOUT_SECONDS = 3;
     private static final long REDIS_TIMEOUT_SECONDS = 3;
-    
-    // Advanced checks configuration
-    private static final long ADVANCED_CHECKS_TIMEOUT_MS = 500; // Strict timeout for advanced checks
-    private static final long ADVANCED_CHECKS_THROTTLE_SECONDS = 30; // Run at most once per 30 seconds
-    
-    // Performance threshold (milliseconds) - response time > 2000ms = DEGRADED
+    private static final long ADVANCED_CHECKS_THROTTLE_SECONDS = 30;
     private static final long RESPONSE_TIME_THRESHOLD_MS = 2000;
     
     // Diagnostic event codes for concise logging
@@ -132,23 +120,38 @@ public class HealthService {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("timestamp", Instant.now().toString());
         
-        Map<String, Object> mysqlStatus = new LinkedHashMap<>();
-        Map<String, Object> redisStatus = new LinkedHashMap<>();
+        Map<String, Object> mysqlStatus = new ConcurrentHashMap<>();
+        Map<String, Object> redisStatus = new ConcurrentHashMap<>();
         
-        // Submit both checks concurrently
-        CompletableFuture<Void> mysqlFuture = CompletableFuture.runAsync(
-            () -> performHealthCheck("MySQL", mysqlStatus, this::checkMySQLHealthSync), executorService);
-        CompletableFuture<Void> redisFuture = CompletableFuture.runAsync(
-            () -> performHealthCheck("Redis", redisStatus, this::checkRedisHealthSync), executorService);
+        // Submit both checks concurrently using executorService for proper cancellation support
+        Future<?> mysqlFuture = executorService.submit(
+            () -> performHealthCheck("MySQL", mysqlStatus, this::checkMySQLHealthSync));
+        Future<?> redisFuture = executorService.submit(
+            () -> performHealthCheck("Redis", redisStatus, this::checkRedisHealthSync));
         
-        // Wait for both checks to complete with combined timeout
+        // Wait for both checks to complete with combined timeout (shared deadline)
         long maxTimeout = Math.max(MYSQL_TIMEOUT_SECONDS, REDIS_TIMEOUT_SECONDS) + 1;
+        long deadlineNs = System.nanoTime() + TimeUnit.SECONDS.toNanos(maxTimeout);
         try {
-            CompletableFuture.allOf(mysqlFuture, redisFuture)
-                .get(maxTimeout, TimeUnit.SECONDS);
+            mysqlFuture.get(maxTimeout, TimeUnit.SECONDS);
+            long remainingNs = deadlineNs - System.nanoTime();
+            if (remainingNs > 0) {
+                redisFuture.get(remainingNs, TimeUnit.NANOSECONDS);
+            } else {
+                redisFuture.cancel(true);
+            }
         } catch (TimeoutException e) {
             logger.warn("Health check aggregate timeout after {} seconds", maxTimeout);
             mysqlFuture.cancel(true);
+            redisFuture.cancel(true);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            logger.warn("Health check was interrupted");
+            mysqlFuture.cancel(true);
+            redisFuture.cancel(true);
+        } catch (Exception e) {
+            logger.warn("Health check execution error: {}", e.getMessage());
+        }
             redisFuture.cancel(true);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -402,7 +405,7 @@ public class HealthService {
                 "WHERE (state = 'Waiting for table metadata lock' " +
                 "   OR state = 'Waiting for row lock' " +
                 "   OR state = 'Waiting for lock') " +
-                "AND user NOT IN ('event_scheduler', 'system user', 'root')")) {
+                "AND user = USER()")) {
             stmt.setQueryTimeout(2);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
