@@ -95,8 +95,8 @@ public class HealthService {
     private volatile AdvancedCheckResult cachedAdvancedCheckResult = null;
     private final ReentrantReadWriteLock advancedCheckLock = new ReentrantReadWriteLock();
     
-    @Value("${health.advanced.enabled:true}")
-    private boolean advancedHealthChecksEnabled;
+    // Advanced checks always enabled
+    private static final boolean ADVANCED_HEALTH_CHECKS_ENABLED = true;
 
     public HealthService(DataSource dataSource,
                         @Autowired(required = false) RedisTemplate<String, Object> redisTemplate) {
@@ -344,7 +344,7 @@ public class HealthService {
 
     // Internal advanced health checks for MySQL - do not expose details in responses
     private boolean performAdvancedMySQLChecksWithThrottle() {
-        if (!advancedHealthChecksEnabled) {
+        if (!ADVANCED_HEALTH_CHECKS_ENABLED) {
             return false; // Advanced checks disabled
         }
         
