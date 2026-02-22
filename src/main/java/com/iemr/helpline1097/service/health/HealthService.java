@@ -142,10 +142,12 @@ public class HealthService {
             ensurePopulated(redisStatus, REDIS_COMPONENT);
             // Fall through to build response with DOWN status
         } else {
+            Future<?> mysqlFuture = null;
+            Future<?> redisFuture = null;
             try {
-                Future<?> mysqlFuture = executorService.submit(
+                mysqlFuture = executorService.submit(
                     () -> performHealthCheck(MYSQL_COMPONENT, mysqlStatus, this::checkMySQLHealthSync));
-                Future<?> redisFuture = executorService.submit(
+                redisFuture = executorService.submit(
                     () -> performHealthCheck(REDIS_COMPONENT, redisStatus, this::checkRedisHealthSync));
                 
                 // Wait for both checks to complete with combined timeout (shared deadline)
@@ -160,9 +162,13 @@ public class HealthService {
                 }
             } catch (TimeoutException e) {
                 logger.warn("Health check aggregate timeout after {} seconds", Math.max(MYSQL_TIMEOUT_SECONDS, REDIS_TIMEOUT_SECONDS) + 1);
+                if (mysqlFuture != null) mysqlFuture.cancel(true);
+                if (redisFuture != null) redisFuture.cancel(true);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 logger.warn("Health check was interrupted");
+                if (mysqlFuture != null) mysqlFuture.cancel(true);
+                if (redisFuture != null) redisFuture.cancel(true);
             } catch (Exception e) {
                 logger.warn("Health check execution error: {}", e.getMessage());
             }
