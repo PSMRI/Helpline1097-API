@@ -143,16 +143,16 @@ public class HealthService {
             ensurePopulated(redisStatus, REDIS_COMPONENT);
             // Fall through to build response with DOWN status
         } else {
-            // Submit both checks concurrently using executorService for proper cancellation support
-            Future<?> mysqlFuture = executorService.submit(
-                () -> performHealthCheck(MYSQL_COMPONENT, mysqlStatus, this::checkMySQLHealthSync));
-            Future<?> redisFuture = executorService.submit(
-                () -> performHealthCheck(REDIS_COMPONENT, redisStatus, this::checkRedisHealthSync));
-            
-            // Wait for both checks to complete with combined timeout (shared deadline)
-            long maxTimeout = Math.max(MYSQL_TIMEOUT_SECONDS, REDIS_TIMEOUT_SECONDS) + 1;
-            long deadlineNs = System.nanoTime() + TimeUnit.SECONDS.toNanos(maxTimeout);
             try {
+                // Submit both checks concurrently;
+                Future<?> mysqlFuture = executorService.submit(
+                    () -> performHealthCheck(MYSQL_COMPONENT, mysqlStatus, this::checkMySQLHealthSync));
+                Future<?> redisFuture = executorService.submit(
+                    () -> performHealthCheck(REDIS_COMPONENT, redisStatus, this::checkRedisHealthSync));
+                
+                // Wait for both checks to complete with combined timeout (shared deadline)
+                long maxTimeout = Math.max(MYSQL_TIMEOUT_SECONDS, REDIS_TIMEOUT_SECONDS) + 1;
+                long deadlineNs = System.nanoTime() + TimeUnit.SECONDS.toNanos(maxTimeout);
                 mysqlFuture.get(maxTimeout, TimeUnit.SECONDS);
                 long remainingNs = deadlineNs - System.nanoTime();
                 if (remainingNs > 0) {
@@ -161,19 +161,13 @@ public class HealthService {
                     redisFuture.cancel(true);
                 }
             } catch (TimeoutException e) {
-                logger.warn("Health check aggregate timeout after {} seconds", maxTimeout);
-                mysqlFuture.cancel(true);
-                redisFuture.cancel(true);
+                logger.warn("Health check aggregate timeout after {} seconds", Math.max(MYSQL_TIMEOUT_SECONDS, REDIS_TIMEOUT_SECONDS) + 1);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 logger.warn("Health check was interrupted");
-                mysqlFuture.cancel(true);
-                redisFuture.cancel(true);
-                // Mark components as DOWN before returning
             } catch (Exception e) {
+                // Also catches RejectedExecutionException from submit() during shutdown
                 logger.warn("Health check execution error: {}", e.getMessage());
-                mysqlFuture.cancel(true);
-                redisFuture.cancel(true);
             }
         }
         
@@ -203,25 +197,25 @@ public class HealthService {
     }
 
     private HealthCheckResult checkMySQLHealthSync() {
+        boolean basicPassed = false;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement("SELECT 1 as health_check")) {
             
             stmt.setQueryTimeout((int) MYSQL_TIMEOUT_SECONDS);
             
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    // Basic health check passed, now run advanced checks with throttling
-                    boolean isDegraded = performAdvancedMySQLChecksWithThrottle();
-                    return new HealthCheckResult(true, null, isDegraded);
-                }
+                basicPassed = rs.next();
             }
-            
-            return new HealthCheckResult(false, "No result from health check query", false);
-            
         } catch (Exception e) {
             logger.warn("MySQL health check failed: {}", e.getMessage(), e);
             return new HealthCheckResult(false, "MySQL connection failed", false);
         }
+        // Connection closed before advanced checks to avoid holding two pool connections simultaneously
+        if (!basicPassed) {
+            return new HealthCheckResult(false, "No result from health check query", false);
+        }
+        boolean isDegraded = performAdvancedMySQLChecksWithThrottle();
+        return new HealthCheckResult(true, null, isDegraded);
     }
 
     private HealthCheckResult checkRedisHealthSync() {
@@ -471,7 +465,8 @@ public class HealthService {
     private boolean hasSlowQueries(Connection connection) {
         try (PreparedStatement stmt = connection.prepareStatement(
                 "SELECT COUNT(*) FROM INFORMATION_SCHEMA.PROCESSLIST " +
-                "WHERE command != 'Sleep' AND time > ? AND user NOT IN ('event_scheduler', 'system user')")) {
+                "WHERE command != 'Sleep' AND time > ? " +
+                "AND user = SUBSTRING_INDEX(USER(), '@', 1)")) {
             stmt.setQueryTimeout(2);
             stmt.setInt(1, 10); // Queries running longer than 10 seconds
             try (ResultSet rs = stmt.executeQuery()) {
