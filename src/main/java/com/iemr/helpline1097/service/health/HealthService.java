@@ -101,7 +101,6 @@ public class HealthService {
                         @Autowired(required = false) RedisTemplate<String, Object> redisTemplate) {
         this.dataSource = dataSource;
         this.redisTemplate = redisTemplate;
-        // 2 threads per concurrent caller; size for at least 3 simultaneous health checks
         this.executorService = Executors.newFixedThreadPool(6);
         this.advancedCheckExecutor = Executors.newSingleThreadExecutor(r -> {
             Thread t = new Thread(r, "health-advanced-check");
@@ -144,7 +143,6 @@ public class HealthService {
             // Fall through to build response with DOWN status
         } else {
             try {
-                // Submit both checks concurrently;
                 Future<?> mysqlFuture = executorService.submit(
                     () -> performHealthCheck(MYSQL_COMPONENT, mysqlStatus, this::checkMySQLHealthSync));
                 Future<?> redisFuture = executorService.submit(
@@ -166,7 +164,6 @@ public class HealthService {
                 Thread.currentThread().interrupt();
                 logger.warn("Health check was interrupted");
             } catch (Exception e) {
-                // Also catches RejectedExecutionException from submit() during shutdown
                 logger.warn("Health check execution error: {}", e.getMessage());
             }
         }
@@ -210,7 +207,6 @@ public class HealthService {
             logger.warn("MySQL health check failed: {}", e.getMessage(), e);
             return new HealthCheckResult(false, "MySQL connection failed", false);
         }
-        // Connection closed before advanced checks to avoid holding two pool connections simultaneously
         if (!basicPassed) {
             return new HealthCheckResult(false, "No result from health check query", false);
         }
