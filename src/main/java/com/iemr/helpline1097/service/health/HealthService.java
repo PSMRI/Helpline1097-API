@@ -46,7 +46,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -102,7 +101,8 @@ public class HealthService {
                         @Autowired(required = false) RedisTemplate<String, Object> redisTemplate) {
         this.dataSource = dataSource;
         this.redisTemplate = redisTemplate;
-        this.executorService = Executors.newFixedThreadPool(2);
+        // 2 threads per concurrent caller; size for at least 3 simultaneous health checks
+        this.executorService = Executors.newFixedThreadPool(6);
         this.advancedCheckExecutor = Executors.newSingleThreadExecutor(r -> {
             Thread t = new Thread(r, "health-advanced-check");
             t.setDaemon(true);
