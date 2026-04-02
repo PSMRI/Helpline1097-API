@@ -206,7 +206,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		ObjectMapper objectMapper = new ObjectMapper();
 		
 		HttpEntity<Object> request1 = RestTemplateUtil.createRequestEntity(feedbackDetails, request.getHeader("Authorization"));
-		String url = properties.getPropertyByName("common-url") + "/" + properties.getPropertyByName("create-feedback");
+		String url = properties.getPropertyByName("COMMON_API_BASE_URL") + properties.getPropertyByName("create-feedback");
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request1, String.class);
 		OutputResponse convertValue = objectMapper.readValue(response.getBody(), OutputResponse.class);
 		return convertValue;
