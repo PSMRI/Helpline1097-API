@@ -109,18 +109,34 @@ public class ConfigProperties {
 		return sessionExpiryTime;
 	}
 
-	public static String getPropertyByName(String propertyName) {
-		String result = null;
-		try {
-			if (properties == null) {
-				initalizeProperties();
-			}
-			result = properties.getProperty(propertyName);
-		} catch (Exception e) {
-			logger.error(propertyName + " retrival failed.", e);
-		}
-		return result;
-	}
+ 
+    public static String getPropertyByName(String propertyName)
+    {
+        String result = null;
+        try
+        {
+            if (environment != null)
+            {
+                result = environment.getProperty(propertyName);
+            }
+            if (result == null)
+            {
+                if (properties == null)
+                {
+                    initalizeProperties();
+                }
+                result = properties.getProperty(propertyName).trim();
+            } else
+            {
+                result = result.trim();
+            }
+        } catch (Exception e)
+        {
+            logger.error(propertyName + " retrival failed.", e);
+        }
+        return result;
+    }
+ 
 
 	public static Boolean getBoolean(String propertyName) {
 		Boolean result = false;
