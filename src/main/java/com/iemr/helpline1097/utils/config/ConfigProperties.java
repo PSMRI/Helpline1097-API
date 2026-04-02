@@ -112,10 +112,17 @@ public class ConfigProperties {
 	public static String getPropertyByName(String propertyName) {
 		String result = null;
 		try {
-			if (properties == null) {
-				initalizeProperties();
+			if (environment != null) {
+				result = environment.getProperty(propertyName);
 			}
-			result = properties.getProperty(propertyName);
+			if (result == null) {
+				if (properties == null) {
+					initalizeProperties();
+				}
+				result = properties.getProperty(propertyName);
+			} else {
+				result = result.trim();
+			}
 		} catch (Exception e) {
 			logger.error(propertyName + " retrival failed.", e);
 		}
