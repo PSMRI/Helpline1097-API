@@ -34,14 +34,17 @@ To build the Helpline1097 microservice from source, follow these steps:
 - Redis
 - Spring Boot v2
 - MySQL
+- Node JS
 
 ### Installation
 
 1. Clone the repository to your local machine.
-2. Install the dependencies and build the module:
+2. Enable git hooks (run once after cloning):
+   - Run the command `git config core.hooksPath .git-hooks`.
+3. Install the dependencies and build the module:
    - Run `mvn clean install` in the project directory.
-3. You can copy `common_example.properties` to `common_local.properties` and edit the file accordingly. The file is under `src/main/environment` folder.
-4. Run the development server:
+4. You can copy `common_example.properties` to `common_local.properties` and edit the file accordingly. The file is under `src/main/environment` folder.
+5. Run the development server:
    - Start the Redis server.
    - Run `mvn spring-boot:run` in the project directory.
    - Open your browser and go to `http://localhost:8080/swagger-ui.html#!/` to access the Swagger API documentation.
