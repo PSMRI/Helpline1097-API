@@ -31,6 +31,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -66,6 +67,9 @@ import jakarta.servlet.http.HttpServletRequest;
 public class FeedbackServiceImpl implements FeedbackService {
 
 	private Logger logger = LoggerFactory.getLogger(FeedbackServiceImpl.class);
+
+	@Value("${common-url}")
+	private String commonUrl;
 
 	private BenCalServiceCatSubcatMappingRepo benCalServiceCatSubcatMappingRepo;
 	@Autowired
@@ -206,7 +210,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 		ObjectMapper objectMapper = new ObjectMapper();
 		
 		HttpEntity<Object> request1 = RestTemplateUtil.createRequestEntity(feedbackDetails, request.getHeader("Authorization"));
-		String url = properties.getPropertyByName("common-url") + "/" + properties.getPropertyByName("create-feedback");
+		// String url = properties.getPropertyByName("common-url") + "/" + properties.getPropertyByName("create-feedback");
+		String url = commonUrl + "/" + properties.getPropertyByName("create-feedback");
+		
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request1, String.class);
 		OutputResponse convertValue = objectMapper.readValue(response.getBody(), OutputResponse.class);
 		return convertValue;
